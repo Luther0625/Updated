@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fafafa"
+    tools:context=".DashboardActivity">
+    
+    <RelativeLayout
+        android:id="@+id/custom_toolbar_dashboard"
+        android:background="@color/lgreen"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize">
+        
+        <ImageView
+            android:id="@+id/refresh_btn"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/refresh_img"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:id="@+id/sign_out_btn"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/logout"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:layout_marginLeft="45dp"
+            android:src="@drawable/bg"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/refresh_btn"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textColor="@color/dgreen"
+            android:text="MoneyMinder"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view_labels"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@id/custom_toolbar_dashboard"
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+        
+        <LinearLayout
+            android:layout_gravity="center"
+            android:padding="10dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                
+                <TextView
+                    android:layout_alignParentLeft="true"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:text="Income"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/total_income"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="000"
+                    android:textColor="@color/dgreen"
+                    android:textSize="18sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_alignParentLeft="true"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:text="Expense"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/total_expense"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="000"
+                    android:textColor="@color/wred"
+                    android:textSize="18sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_alignParentLeft="true"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:text="Balance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/totalBalance"
+                    android:layout_alignParentRight="true"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:text="000"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/card_view_labels"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/history_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </androidx.core.widget.NestedScrollView>
+    
+    <androidx.cardview.widget.CardView
+        android:id="@+id/add_floating_btn"
+        app:cardCornerRadius="40dp"
+        android:layout_margin="16dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:backgroundTint="@color/lgreen"
+        android:layout_width="80dp"
+        android:layout_height="60dp">
+        
+        <RelativeLayout
+            android:padding="10dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_centerVertical="true"
+                android:id="@+id/add_img"
+                android:src="@drawable/baseline_add_24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            
+            <TextView
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/add_img"
+                android:textColor="@color/yells"
+                android:text="Add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
