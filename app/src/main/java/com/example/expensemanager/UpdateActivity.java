@@ -1,5 +1,6 @@
 package com.example.expensemanager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -12,17 +13,30 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.expensemanager.databinding.ActivityUpdateBinding;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
 public class UpdateActivity extends AppCompatActivity {
     ActivityUpdateBinding binding;
-    String newType;
+    public static String newType = "000";
 
     FirebaseFirestore firebaseFirestore;
     FirebaseAuth firebaseAuth;
+    TransactionAdapter transactionAdapter;
+    ArrayList<TransactionModel> transactionModelArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +46,8 @@ public class UpdateActivity extends AppCompatActivity {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
+        transactionModelArrayList = new ArrayList<>();
+
 
         String id = getIntent().getStringExtra("id");
         String amount = getIntent().getStringExtra("amount");
@@ -75,13 +91,41 @@ public class UpdateActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String amount = binding.userAmountAdd.getText().toString();
                 String note = binding.userNoteAdd.getText().toString();
+
+//                SimpleDateFormat sdf = new SimpleDateFormat("dd MM yyyy_HH:mm", Locale.getDefault());
+//                String currentDateandTime = sdf.format(new Date());
+//
+//                Map<String, Object> transaction = new HashMap<>();
+//                transaction.put("amount", amount);
+//                transaction.put("note", note);
+//                transaction.put("type", newType);
+//                transaction.put("date", currentDateandTime);
+//
+//                firebaseFirestore.collection("Expense").document(firebaseAuth.getUid()).collection("Notes").document(id)
+//                        .update(transaction)
+//                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                            @Override
+//                            public void onSuccess(Void unused) {
+//                                onBackPressed();
+//                                transactionAdapter = new TransactionAdapter(UpdateActivity.this, transactionModelArrayList);
+//                                Toast.makeText(UpdateActivity.this, "Added!", Toast.LENGTH_SHORT).show();
+//                            }
+//                        })
+//                        .addOnFailureListener(new OnFailureListener() {
+//                            @Override
+//                            public void onFailure(@NonNull Exception e) {
+//                                Toast.makeText(UpdateActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
+
                 firebaseFirestore.collection("Expense").document(firebaseAuth.getUid())
                         .collection("Notes").document(id)
-                        .update("amount", amount, "note", note, "type", type)
+                        .update("amount", amount, "note", note, "type", newType)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
-                                onBackPressed();
+                                startActivity(new Intent(UpdateActivity.this, DashboardActivity.class));
+                                transactionAdapter = new TransactionAdapter(UpdateActivity.this, transactionModelArrayList);
                                 Toast.makeText(UpdateActivity.this, "Update success!", Toast.LENGTH_SHORT).show();
                             }
                         })
@@ -103,7 +147,8 @@ public class UpdateActivity extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
-                                onBackPressed();
+                                startActivity(new Intent(UpdateActivity.this, DashboardActivity.class));
+                                transactionAdapter = new TransactionAdapter(UpdateActivity.this, transactionModelArrayList);
                                 Toast.makeText(UpdateActivity.this, "Delete successful!", Toast.LENGTH_SHORT).show();
                             }
                         })

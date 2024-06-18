@@ -33,7 +33,7 @@ public class SignUpActivity extends AppCompatActivity {
         binding.goToLoginScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
                 try {
                     startActivity(intent);
                 }catch (Exception e){

@@ -4,6 +4,11 @@ public class TransactionModel {
     private String id, note, amount, type, date;
 
     public TransactionModel() {
+        this.id = id;
+        this.note = note;
+        this.type = type;
+        this.amount = amount;
+        this.date = date;
     }
 
     public TransactionModel(String id, String note, String amount, String type, String date) {

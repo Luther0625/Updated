@@ -15,6 +15,9 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.expensemanager.databinding.ActivityDashboardBinding;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DashboardActivity extends AppCompatActivity {
 
@@ -32,6 +36,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     int sumExpense = 0;
     int sumIncome = 0;
+    private long income = 0, expense = 0;
 
     ArrayList<TransactionModel> transactionModelArrayList;
     TransactionAdapter transactionAdapter;
@@ -90,6 +95,7 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
         loadData();
+        setUpGraph();
     }
 
     private void createSignOutDialog() {
@@ -115,6 +121,7 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         loadData();
+        setUpGraph();
     }
 
     private void loadData() {
@@ -133,22 +140,43 @@ public class DashboardActivity extends AppCompatActivity {
 
                             int amount = Integer.parseInt(ds.getString("amount"));
                             if (ds.getString("type").equals("Expense")){
-                                sumExpense = sumExpense + amount;
+                                expense += amount;
                             }
                             else {
-                                sumIncome = sumIncome + amount;
+                                income += amount;
                             }
                             transactionModelArrayList.add(model);
                         }
 
-                        binding.totalIncome.setText(String.valueOf(sumIncome));
-                        binding.totalExpense.setText(String.valueOf(sumExpense));
-                        binding.totalBalance.setText(String.valueOf(sumIncome-sumExpense));
+//                        binding.totalIncome.setText(String.valueOf(sumIncome));
+//                        binding.totalExpense.setText(String.valueOf(sumExpense));
+//                        binding.totalBalance.setText(String.valueOf(sumIncome-sumExpense));
 
                         transactionAdapter = new TransactionAdapter(DashboardActivity.this, transactionModelArrayList);
 
                         binding.historyRecyclerView.setAdapter(transactionAdapter);
+                        setUpGraph();
                     }
                 });
+    }
+
+    private void setUpGraph() {
+        Intent intent = getIntent();
+        String newType = intent.getStringExtra(UpdateActivity.newType);
+        List<com.github.mikephil.charting.data.PieEntry> pieEntries = new ArrayList<>();
+        List<Integer> colorsList = new ArrayList<>();
+        if (income != 0) {
+            pieEntries.add(new com.github.mikephil.charting.data.PieEntry(income, "Income"));
+            colorsList.add(getResources().getColor(R.color.lgreen));
+        }
+        if (expense != 0) {
+            pieEntries.add(new PieEntry(expense, "Expense"));
+            colorsList.add(getResources().getColor(R.color.yells));
+        }
+        com.github.mikephil.charting.data.PieDataSet pieDataSet = new PieDataSet(pieEntries, "Income vs Expense");
+        pieDataSet.setColors(colorsList);
+        PieData pieData = new PieData(pieDataSet);
+        binding.pieChart.setData(pieData);
+        binding.pieChart.invalidate();
     }
 }

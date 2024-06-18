@@ -2,6 +2,7 @@ package com.example.expensemanager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Toast;
 
@@ -25,66 +26,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        setContentView(R.layout.activity_main);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-
-        firebaseAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+        Handler handler =new Handler();
+        int delayMillis = 4000;
+        handler.postDelayed(new Runnable() {
             @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (firebaseAuth.getCurrentUser() != null){
-                    try {
-                        startActivity(new Intent(MainActivity.this, DashboardActivity.class));
-                        finish();
-                    }catch (Exception e){
-
-                    }
-                }
+            public void run() {
+                startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                finish();
             }
-        });
-
-        binding.goToSignUpScreen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
-                try {
-                    startActivity(intent);
-                }catch (Exception e){
-
-                }
-            }
-        });
-
-        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = binding.emailLogin.getText().toString().trim();
-                String password = binding.passwordLogin.getText().toString().trim();
-
-                if (email.length() <= 0 || password.length() <= 0){
-                    Toast.makeText(MainActivity.this, "Email/Password empty!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                firebaseAuth.signInWithEmailAndPassword(email, password)
-                        .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                            @Override
-                            public void onSuccess(AuthResult authResult) {
-                                try {
-                                    startActivity(new Intent(MainActivity.this, DashboardActivity.class));
-                                }catch (Exception e){
-
-                                }
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-            }
-        });
+        }, delayMillis);
 
     }
 }
