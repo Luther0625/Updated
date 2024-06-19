@@ -5,13 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.expensemanager.databinding.ActivityDashboardBinding;
@@ -34,8 +30,6 @@ public class DashboardActivity extends AppCompatActivity {
     FirebaseFirestore firebaseFirestore;
     FirebaseAuth firebaseAuth;
 
-    int sumExpense = 0;
-    int sumIncome = 0;
     private long income = 0, expense = 0;
 
     ArrayList<TransactionModel> transactionModelArrayList;
@@ -58,7 +52,7 @@ public class DashboardActivity extends AppCompatActivity {
         firebaseAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (firebaseAuth.getCurrentUser() == null){
+                if (firebaseAuth.getCurrentUser() == null) {
                     startActivity(new Intent(DashboardActivity.this, MainActivity.class));
                     finish();
                 }
@@ -77,8 +71,8 @@ public class DashboardActivity extends AppCompatActivity {
             public void onClick(View v) {
                 try {
                     startActivity(new Intent(DashboardActivity.this, AddTransactionActivity.class));
-                }catch (Exception e){
-
+                } catch (Exception e) {
+                    // Handle exception
                 }
             }
         });
@@ -86,16 +80,11 @@ public class DashboardActivity extends AppCompatActivity {
         binding.refreshBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    startActivity(new Intent(DashboardActivity.this, DashboardActivity.class));
-                    finish();
-                }catch (Exception e){
-
-                }
+                loadData();
             }
         });
+
         loadData();
-        setUpGraph();
     }
 
     private void createSignOutDialog() {
@@ -121,16 +110,19 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         loadData();
-        setUpGraph();
     }
 
     private void loadData() {
+        // Reset the income and expense values before recalculating
+        income = 0;
+        expense = 0;
+
         firebaseFirestore.collection("Expense").document(firebaseAuth.getUid()).collection("Notes")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         transactionModelArrayList.clear();
-                        for (DocumentSnapshot ds:task.getResult()){
+                        for (DocumentSnapshot ds : task.getResult()) {
                             TransactionModel model = new TransactionModel(
                                     ds.getString("id"),
                                     ds.getString("note"),
@@ -139,21 +131,20 @@ public class DashboardActivity extends AppCompatActivity {
                                     ds.getString("date"));
 
                             int amount = Integer.parseInt(ds.getString("amount"));
-                            if (ds.getString("type").equals("Expense")){
+                            if (ds.getString("type").equals("Expense")) {
                                 expense += amount;
-                            }
-                            else {
+                            } else {
                                 income += amount;
                             }
                             transactionModelArrayList.add(model);
                         }
 
-//                        binding.totalIncome.setText(String.valueOf(sumIncome));
-//                        binding.totalExpense.setText(String.valueOf(sumExpense));
-//                        binding.totalBalance.setText(String.valueOf(sumIncome-sumExpense));
+                        // Update the total income, expense, and balance
+                        binding.totalIncome.setText(String.valueOf(income));
+                        binding.totalExpense.setText(String.valueOf(expense));
+                        binding.totalBalance.setText(String.valueOf(income - expense));
 
                         transactionAdapter = new TransactionAdapter(DashboardActivity.this, transactionModelArrayList);
-
                         binding.historyRecyclerView.setAdapter(transactionAdapter);
                         setUpGraph();
                     }
@@ -161,19 +152,20 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void setUpGraph() {
-        Intent intent = getIntent();
-        String newType = intent.getStringExtra(UpdateActivity.newType);
-        List<com.github.mikephil.charting.data.PieEntry> pieEntries = new ArrayList<>();
+        List<PieEntry> pieEntries = new ArrayList<>();
         List<Integer> colorsList = new ArrayList<>();
-        if (income != 0) {
-            pieEntries.add(new com.github.mikephil.charting.data.PieEntry(income, "Income"));
+        long remainingIncome = income - expense;
+
+        if (remainingIncome > 0) {
+            pieEntries.add(new PieEntry(remainingIncome, "Income"));
             colorsList.add(getResources().getColor(R.color.lgreen));
         }
-        if (expense != 0) {
+        if (expense > 0) {
             pieEntries.add(new PieEntry(expense, "Expense"));
             colorsList.add(getResources().getColor(R.color.yells));
         }
-        com.github.mikephil.charting.data.PieDataSet pieDataSet = new PieDataSet(pieEntries, "Income vs Expense");
+
+        PieDataSet pieDataSet = new PieDataSet(pieEntries, "Income vs Expense");
         pieDataSet.setColors(colorsList);
         PieData pieData = new PieData(pieDataSet);
         binding.pieChart.setData(pieData);

@@ -66,7 +66,65 @@
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/pieChart"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent" >
+
+
+                <TextView
+                    android:paddingTop="170dp"
+                    android:id="@+id/Income"
+                    android:textSize="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/dgreen"
+                    android:text="Total Income:"
+                    />
+                <TextView
+                    android:paddingTop="200dp"
+                    android:id="@+id/Expense"
+                    android:textSize="10dp"
+                    android:textColor="@color/dgreen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total Expense:"
+                    />
+                <TextView
+                    android:paddingTop="230dp"
+                    android:id="@+id/Balance"
+                    android:textColor="@color/dgreen"
+                    android:textSize="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total Balance:"
+                    />
+
+                <TextView
+                    android:paddingTop="170dp"
+                    android:paddingLeft="60dp"
+                    android:textSize="10dp"
+                    android:id="@+id/totalIncome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total Income" />
+
+                <TextView
+                    android:paddingTop="200dp"
+                    android:paddingLeft="65dp"
+                    android:textSize="10dp"
+                    android:id="@+id/totalExpense"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total Expense" />
+
+                <TextView
+                    android:paddingTop="230dp"
+                    android:paddingLeft="63dp"
+                    android:textSize="10dp"
+                    android:id="@+id/totalBalance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total Balance" />
+
+            </com.github.mikephil.charting.charts.PieChart>
 
 
         </androidx.cardview.widget.CardView>
@@ -76,6 +134,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp" />
+
     </LinearLayout>
 
     <androidx.cardview.widget.CardView
