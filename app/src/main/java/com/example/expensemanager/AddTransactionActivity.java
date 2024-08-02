@@ -75,7 +75,7 @@ public class AddTransactionActivity extends AppCompatActivity {
                     return;
                 }
 
-                SimpleDateFormat sdf = new SimpleDateFormat("dd MM yyyy_HH:mm", Locale.getDefault());
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
                 String currentDateandTime = sdf.format(new Date());
 
                 String id = UUID.randomUUID().toString();

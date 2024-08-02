@@ -2,7 +2,11 @@ package com.example.expensemanager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -18,17 +22,44 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Firebase;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import android.widget.CompoundButton;
 
 public class SignUpActivity extends AppCompatActivity {
 
     ActivitySignUpBinding binding;
     FirebaseAuth firebaseAuth;
+    EditText password, repassword;
+    CheckBox showpassword;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivitySignUpBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         firebaseAuth = FirebaseAuth.getInstance();
+
+        password = findViewById(R.id.password_for_signUp);
+        repassword = findViewById(R.id.auth_for_signUp);
+        showpassword = findViewById(R.id.showpassword_login);
+        password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        repassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+
+        showpassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    repassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    password.setSelection(password.getText().length());
+                    repassword.setSelection(password.getText().length());
+                }else {
+                    password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    repassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    password.setSelection(password.getText().length());
+                    repassword.setSelection(password.getText().length());
+                }
+            }
+        });
 
         binding.goToLoginScreen.setOnClickListener(new View.OnClickListener() {
             @Override
